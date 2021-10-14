@@ -36,7 +36,7 @@ module.exports = function (app) {
       if (!title) {
         return res.send("Invalid request");
       }
-      const bookObj = { _id: getId(), title, comments: [] };
+      const bookObj = { _id: getId(), title };
       db.push(bookObj);
       res.json(bookObj);
     })
@@ -57,7 +57,12 @@ module.exports = function (app) {
         return res.send("no book exists");
       }
 
-      res.json(db[bookIndex]);
+      const booksObjClone = { ...db[bookIndex] };
+      if (!booksObjClone.comments) {
+        booksObjClone.comments = [];
+      }
+
+      res.json(booksObjClone);
     })
 
     .post(function (req, res) {
@@ -71,7 +76,11 @@ module.exports = function (app) {
       if (bookIndex < 0) {
         return res.send("no book exists");
       }
-      db[bookIndex].comments.push(comment);
+      if (!db[bookIndex].comments) {
+        db[bookIndex].comments = [comment];
+      } else {
+        db[bookIndex].comments.push(comment);
+      }
       return res.json(db[bookIndex]);
     })
 
