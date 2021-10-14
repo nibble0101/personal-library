@@ -33,6 +33,7 @@ module.exports = function (app) {
     .post(function (req, res) {
       let title = req.body.title;
       //response will contain new book object including atleast _id and title
+      // FCC test doesn't require trimming leading and trailing white spaces
       if (!title) {
         return res.send("missing required field title");
       }
@@ -69,15 +70,18 @@ module.exports = function (app) {
       let bookid = req.params.id;
       let comment = req.body.comment;
       //json res format same as .get
-      const bookIndex = db.findIndex((bookObj) => bookObj._id === bookid.trim());
+      const bookIndex = db.findIndex(
+        (bookObj) => bookObj._id === bookid.trim()
+      );
       if (bookIndex < 0) {
         return res.send("no book exists");
       }
 
+      // FCC test doesn't require trimming leading and trailing white spaces
       if (!comment) {
         return res.send("missing required field comment");
       }
-     
+
       if (!db[bookIndex].comments) {
         db[bookIndex].comments = [comment];
       } else {
