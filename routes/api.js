@@ -33,7 +33,7 @@ module.exports = function (app) {
     .post(function (req, res) {
       let title = req.body.title;
       //response will contain new book object including atleast _id and title
-      if (!title.trim()) {
+      if (!title) {
         return res.send("missing required field title");
       }
       const bookObj = { _id: getId(), title };
@@ -74,7 +74,7 @@ module.exports = function (app) {
         return res.send("no book exists");
       }
 
-      if (!comment.trim()) {
+      if (!comment) {
         return res.send("missing required field comment");
       }
      
