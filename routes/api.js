@@ -33,8 +33,8 @@ module.exports = function (app) {
     .post(function (req, res) {
       let title = req.body.title;
       //response will contain new book object including atleast _id and title
-      if (!title) {
-        return res.send("Invalid request");
+      if (!title.trim()) {
+        return res.send("missing required field title");
       }
       const bookObj = { _id: getId(), title };
       db.push(bookObj);
@@ -69,13 +69,15 @@ module.exports = function (app) {
       let bookid = req.params.id;
       let comment = req.body.comment;
       //json res format same as .get
-      if (!comment.trim()) {
-        return res.send("missing required field comment");
-      }
-      const bookIndex = db.findIndex((bookObj) => bookObj._id === bookid);
+      const bookIndex = db.findIndex((bookObj) => bookObj._id === bookid.trim());
       if (bookIndex < 0) {
         return res.send("no book exists");
       }
+
+      if (!comment.trim()) {
+        return res.send("missing required field comment");
+      }
+     
       if (!db[bookIndex].comments) {
         db[bookIndex].comments = [comment];
       } else {
